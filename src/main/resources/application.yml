@@ -1,0 +1,190 @@
+spring:
+  application:
+    name: hireflow-backend
+
+  # ── Database ──────────────────────────────────────────────
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/hireflow}
+    username: ${DB_USER:hireflow}
+    password: ${DB_PASS:secret}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      pool-name: HireFlowHikariPool
+
+  # ── JPA / Hibernate ───────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Flyway owns the schema; Hibernate only validates
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC
+        default_batch_fetch_size: 16  # N+1 mitigation
+
+  # ── Flyway ────────────────────────────────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    out-of-order: false
+
+  # ── Redis ─────────────────────────────────────────────────
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          min-idle: 2
+
+  # ── Security / OAuth2 ─────────────────────────────────────
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:changeme}
+            client-secret: ${GOOGLE_CLIENT_SECRET:changeme}
+            scope: openid,profile,email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+  # ── File Upload ───────────────────────────────────────────
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 12MB
+
+# ── Server ────────────────────────────────────────────────
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never       # Don't leak stack traces to clients
+    include-binding-errors: never
+  compression:
+    enabled: true
+    mime-types: application/json,text/html
+    min-response-size: 1024
+
+# ── Actuator ─────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true           # /actuator/health/liveness, /readiness for Kubernetes/ECS
+
+# ── HireFlow custom properties ────────────────────────────
+hireflow:
+  jwt:
+    # RS256 keys — base64-encoded PEM. Generate with: openssl genrsa -out private.pem 2048
+    private-key: ${JWT_PRIVATE_KEY:changeme-generate-rsa-key}
+    public-key: ${JWT_PUBLIC_KEY:changeme-generate-rsa-key}
+    access-token-expiry-seconds: 900           # 15 minutes
+    refresh-token-expiry-days: 7
+
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000}
+
+  ai:
+    provider: ${AI_PROVIDER:openai}            # openai | gemini
+    openai:
+      api-key: ${OPENAI_API_KEY:changeme}
+      model: gpt-4o-mini
+      max-tokens: 1500
+    gemini:
+      api-key: ${GEMINI_API_KEY:changeme}
+      model: gemini-1.5-flash
+
+  storage:
+    provider: ${STORAGE_PROVIDER:local}        # local | s3
+    s3:
+      bucket: ${S3_BUCKET:hireflow-resumes}
+      region: ${AWS_REGION:ap-south-1}
+    local:
+      upload-dir: ${LOCAL_UPLOAD_DIR:./uploads}
+
+  notifications:
+    sendgrid:
+      api-key: ${SENDGRID_API_KEY:changeme}
+      from-email: ${SENDGRID_FROM_EMAIL:noreply@hireflow.ai}
+    twilio:
+      account-sid: ${TWILIO_ACCOUNT_SID:changeme}
+      auth-token: ${TWILIO_AUTH_TOKEN:changeme}
+      from-number: ${TWILIO_FROM_NUMBER:+1234567890}
+
+  rate-limit:
+    auth-requests-per-minute: 5
+    ai-requests-per-minute: 20
+
+# ── Logging ───────────────────────────────────────────────
+logging:
+  level:
+    root: INFO
+    com.hireflow: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-}] %logger{36} - %msg%n"
+
+---
+# ═══════════════════════════════════════════
+# PROFILE: local  (activated via SPRING_PROFILES_ACTIVE=local)
+# ═══════════════════════════════════════════
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    show-sql: true
+  flyway:
+    out-of-order: true          # allow out-of-order migrations in local dev
+
+logging:
+  level:
+    com.hireflow: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+---
+# ═══════════════════════════════════════════
+# PROFILE: prod
+# ═══════════════════════════════════════════
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+
+logging:
+  level:
+    root: WARN
+    com.hireflow: INFO
