@@ -2,6 +2,9 @@ package com.hireflow.config;
 
 import com.hireflow.security.CustomUserDetailsService;
 import com.hireflow.security.JwtAuthFilter;
+import com.hireflow.security.oauth2.CustomOAuth2UserService;
+import com.hireflow.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.hireflow.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,9 +42,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter             jwtAuthFilter;
-    private final CustomUserDetailsService  userDetailsService;
-    private final CorsConfigurationSource   corsConfigurationSource;
+    private final JwtAuthFilter                     jwtAuthFilter;
+    private final CustomUserDetailsService          userDetailsService;
+    private final CorsConfigurationSource           corsConfigurationSource;
+    private final CustomOAuth2UserService           customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     // ── Public paths (no JWT required) ────────────────────────────────────
     private static final String[] PUBLIC_POST = {
@@ -98,10 +104,15 @@ public class SecurityConfig {
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
             // ── OAuth2 login (Google) ─────────────────────────────────────────────
-            // Full OAuth2 config is in Module 5 (GoogleOAuth2Config)
             .oauth2Login(oauth2 -> oauth2
-                    .loginPage("/api/v1/auth/google")
-                    .defaultSuccessUrl("/api/v1/auth/google/callback", true));
+                    .authorizationEndpoint(authorization -> authorization
+                            .baseUri("/api/v1/auth/google"))
+                    .redirectionEndpoint(redirection -> redirection
+                            .baseUri("/login/oauth2/code/*"))
+                    .userInfoEndpoint(userInfo -> userInfo
+                            .userService(customOAuth2UserService))
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler));
 
         return http.build();
     }
