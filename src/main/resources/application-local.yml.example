@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────
+# HireFlow AI — Local development environment variables example
+# Copy this file to application-local.yml and fill in your values.
+# application-local.yml is in .gitignore and must NEVER be committed.
+# ─────────────────────────────────────────────────────────────
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hireflow
+    username: hireflow
+    password: YOUR_LOCAL_DB_PASSWORD
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com
+            client-secret: YOUR_GOOGLE_CLIENT_SECRET
+
+hireflow:
+  jwt:
+    private-key: YOUR_BASE64_RSA_PRIVATE_KEY
+    public-key: YOUR_BASE64_RSA_PUBLIC_KEY
+
+  ai:
+    openai:
+      api-key: sk-YOUR_OPENAI_KEY
+
+  notifications:
+    sendgrid:
+      api-key: SG.YOUR_SENDGRID_KEY
+    twilio:
+      account-sid: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      auth-token: YOUR_TWILIO_AUTH_TOKEN
+
+# How to generate RSA keys:
+#   openssl genrsa -out private.pem 2048
+#   openssl rsa -in private.pem -pubout -out public.pem
+#   base64 -w 0 private.pem   → paste as private-key value
+#   base64 -w 0 public.pem    → paste as public-key value
