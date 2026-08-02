@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SendGridEmailServiceImpl implements EmailService {
 
-    private final HireFlowProperties props;
+    @org.springframework.beans.factory.annotation.Value("${hireflow.notification.sendgrid.api-key:changeme}")
+    private String sendgridApiKey;
 
     @Override
     public void sendEmail(String toEmail, String subject, String bodyHtml) {
-        String apiKey = props.getNotification().getSendgrid().getApiKey();
-
-        if ("changeme".equalsIgnoreCase(apiKey)) {
+        if ("changeme".equalsIgnoreCase(sendgridApiKey)) {
             log.info("============== [MOCK EMAIL DELIVERED] ==============");
             log.info("TO: {}", toEmail);
             log.info("SUBJECT: {}", subject);

@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TwilioSmsServiceImpl implements SmsService {
 
-    private final HireFlowProperties props;
+    @org.springframework.beans.factory.annotation.Value("${hireflow.notification.twilio.account-sid:changeme}")
+    private String twilioAccountSid;
 
     @Override
     public void sendSms(String toPhoneNumber, String messageBody) {
-        String accountSid = props.getNotification().getTwilio().getAccountSid();
-
-        if ("changeme".equalsIgnoreCase(accountSid)) {
+        if ("changeme".equalsIgnoreCase(twilioAccountSid)) {
             log.info("============== [MOCK SMS DELIVERED] ==============");
             log.info("TO: {}", toPhoneNumber);
             log.info("MESSAGE: {}", messageBody);

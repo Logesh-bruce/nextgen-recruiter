@@ -81,13 +81,13 @@ public class GlobalExceptionHandler {
 
     // ── 403 Forbidden ────────────────────────────────────────────────────────
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler({AccessDeniedException.class, com.hireflow.exception.AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleAccessDenied(
-            AccessDeniedException ex,
+            Exception ex,
             HttpServletRequest request) {
 
-        log.warn("Access denied to {} {}", request.getMethod(), request.getRequestURI());
-        return buildResponse(HttpStatus.FORBIDDEN, "You do not have permission to perform this action", request, null);
+        log.warn("Access denied to {} {}: {}", request.getMethod(), request.getRequestURI(), ex.getMessage());
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage() != null ? ex.getMessage() : "You do not have permission to perform this action", request, null);
     }
 
     // ── 404 Not Found ─────────────────────────────────────────────────────────

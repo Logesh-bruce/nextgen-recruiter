@@ -22,7 +22,6 @@ public interface ResumeMapper {
     @Mapping(target = "skills", ignore = true)
     @Mapping(target = "experiences", ignore = true)
     @Mapping(target = "educations", ignore = true)
-    @Mapping(target = "primary", source = "primary")
     ResumeResponse toResumeResponse(Resume resume);
 
     ResumeExperienceResponse toExperienceResponse(ResumeExperience experience);

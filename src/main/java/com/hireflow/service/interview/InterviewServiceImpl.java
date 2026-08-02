@@ -104,17 +104,19 @@ public class InterviewServiceImpl implements InterviewService {
         }
 
         if (user.getRole() == UserRole.RECRUITER) {
-            return interviewRepository.findByJobRecruiterUserId(currentUserId)
+            List<InterviewResponse> list = interviewRepository.findByJobRecruiterUserId(currentUserId)
                     .stream()
                     .filter(i -> status == null || i.getStatus() == status)
                     .map(interviewMapper::toInterviewResponse)
-                    .collect(org.springframework.data.domain.PageImpl::new, (page, item) -> {}, (page1, page2) -> {});
+                    .toList();
+            return new org.springframework.data.domain.PageImpl<>(list, pageable, list.size());
         } else {
-            return interviewRepository.findByApplicationCandidateUserId(currentUserId)
+            List<InterviewResponse> list = interviewRepository.findByApplicationCandidateUserId(currentUserId)
                     .stream()
                     .filter(i -> status == null || i.getStatus() == status)
                     .map(interviewMapper::toInterviewResponse)
-                    .collect(org.springframework.data.domain.PageImpl::new, (page, item) -> {}, (page1, page2) -> {});
+                    .toList();
+            return new org.springframework.data.domain.PageImpl<>(list, pageable, list.size());
         }
     }
 

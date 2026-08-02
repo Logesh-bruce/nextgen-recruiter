@@ -19,8 +19,8 @@ public interface UserMapper {
     @Mapping(target = "avatarUrl", ignore = true)
     @Mapping(target = "oauthProvider", ignore = true)
     @Mapping(target = "oauthSubject", ignore = true)
-    @Mapping(target = "active", constant = "true")
-    @Mapping(target = "emailVerified", constant = "false")
+    @Mapping(target = "isActive", constant = "true")
+    @Mapping(target = "isEmailVerified", constant = "false")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     User toUser(RegisterRequest request);
