@@ -1,0 +1,45 @@
+# ────────────────────────────────────────────
+# HireFlow AI — .gitignore
+# ────────────────────────────────────────────
+
+# === Build output ===
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# === IDE files ===
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+
+# === Secrets & env — NEVER commit these ===
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.properties
+application-secrets.yml
+*.p12
+*.jks
+*.pem
+*.key
+
+# === Logs ===
+logs/
+*.log
+
+# === Maven wrapper cache ===
+.mvn/wrapper/maven-wrapper.jar
+
+# === Testcontainers ===
+.testcontainers.properties
+
+# === OS files ===
+Thumbs.db
