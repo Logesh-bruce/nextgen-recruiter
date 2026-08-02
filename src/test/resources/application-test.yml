@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+
+hireflow:
+  jwt:
+    private-key: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDnnO/tQTmkuWLn8bbGmwQnm40fOOUZre5F86bZKJu5Dh9+dwidEYSjPznQrCZI6ySW2adHzh4gxb00ypzZiPrqhkJxob9INFvQzvHaRbID5/fYHLh8fQ2jd8AzOM840uKeFxibyvmYKHbw5cKVPJw0YxSfekICTtm9fCDTAg5ADfSPPmCOvYaVP0eEBYtww9V4tePz9eNxAD7BcB1gYu0kbrUsCM/xa6zOlDdg3VC8JjEBBmAjFlb/FM7gmn2fGklXqsXMC7GUIV/WRIldeIpM1tZWf8Y3jlSOQcs//1o98xRPve9brlymTnh9MHiI67pi6j7BZtLWM5LrQ5kXYGBjAgMBAAECggEAc3uvsaeU+0ooQ6gkzzAZyTnpColOyhgMNzq+lYaG5qVhFKh7Vf2XGeJ7jE1ZpYABNWn+23GtWf/eUEU6IckH+wnIdWoFuxXINfwJYSDhGst9q3bekcu0ki4yWhfYUufrcJHphjyVaMW8UG7vL4QSCpjgfofyA76XGMCciTl8K3kW898qof3Nfel8pLRoIxGg/xXB09uG7sLEToZrB+nHqC7JN4iEY5l+gi47LmMieKQcp+75M7yVR6RxxkXt5t4Dn3JdnJBWfbxa/TK9PTbGVrL+Xbb4/QeSc0JSFcvuax0ozX6SMt3a3+KY/0L7M2QkqkDpGBS5giRUTr+NOPah8QKBgQD5WEteppkAP+C0HtlWbFL8hbfvUoA8RYXYoJZOaPSb4/HpSk5LC2MpSwnmC5J7yAQ73Y481ud6IGKAp8zjPXiSMCTTie4Z4p9F6TOSL9zdzk7tv63fYlUcdzTFgZ/c2IEVNXam0mK5GLXfqBC7ZEd6xjvt8toiMagXjrFr5SCweQKBgQDty3xejbFZfA4fFhnkUB0dSiZpkV2Aa1ppQHzZxHJzDJcDuMnyBWEIOorxDZs8Zh/VCI2+YwWHc4So79xWgci962k7un1FmwBoRah+B5Ka8Rqy0Sy1/H4ECmJ5zqcH08VGebZiIp6JAT3ekPtWVs86De+ulTxOUOhYe56ICc04uwKBgCxoZUP+N9GrjsGFnP+fW0hOKGwfLWeOmj/ymdJtLuN0vWjnKvqClK6OBr1J4lTZUqe21dZQD/nYOrLfL8Zo9EhU+roSHq3NhsBUwDKRA60dSUFemgDm6nGfaW6jn20dwh+c3fzoC10b4Yhrzk8RlQlwtMu0LNVaMq2/ZCnrLN9BAoGBAJPBhsvx2ysxLE0gnIIDTbPvaSLbkm/DRPB1g56EtGDMh+FmJwVdVkeYqNDTlYvYIRtsLzcHrF3X56xZLl4KUsO/zSmx3Tks8PnZnrKA3hWsjtxhoRiLhXnZQgtR3vO8IK6D3lHoFP4oaVssVx/03NrD4hRm4ov/NgAVABKjlIMVAoGARYU2Pphdg3r2j301iMkAwGvF48kvmFDqyofIq8jP7rbHeScWTcnFrYAaV1SXRVn0WxrP4n0Wyk+NcQJ5SDsJVjlU0dBIOwG+49xPzD6zBok2fpNPPVzrOKkUWeOfaTyZpenRjpl0HxIBonbW7eao3PQA9DgnXEROfb4us+iVx2idUOMZEw="
+    public-key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA55zv7UE5pLli5/G2xpsEJ5uNHzjlGa3uRfOm2SibuQ4ffncInRGEoz850KwmSOskltmnR84eIMW9NMqc2Yj66oZCcaG/SDRb0M7x2kWyA+f32By4fH0No3fAMzjPONLinhcYm8r5mCh28OXClTycNGMUn3pCAk7ZvXwg0wIOQA30jz5gjr2GlT9HhAWLcMPVeLXj8/XjcQA+wXAdYGLtJG61LAjP8WuszpQ3YN1QvCYxAQZgIxZW/xTO4Jp9nxpJV6rFzAuxlCFf1kSJXXiKTNbWVn/GN45UjkHLP/9aPfMUT73vW65cpk54fTB4iOu6Yuo+wWbS1jOS60OZF2BgYwIDAQAB"
+    access-token-expiry-seconds: 900
+    refresh-token-expiry-days: 7

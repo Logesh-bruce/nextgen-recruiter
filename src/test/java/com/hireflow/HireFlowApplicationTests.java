@@ -1,7 +1,9 @@
 package com.hireflow;
 
+import com.hireflow.security.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -11,6 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 class HireFlowApplicationTests {
+
+    @MockBean
+    private JwtProvider jwtProvider;
 
     @Test
     void contextLoads() {
