@@ -7,7 +7,7 @@
 ## Architecture
 
 ```
-com.hireflow
+com.hireflow 
 ├── config/          # SecurityConfig, CorsConfig, AsyncConfig, RedisConfig
 ├── controller/      # Thin HTTP entry points — delegates to services
 ├── service/         # Business logic (interface + impl)
